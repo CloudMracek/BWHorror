@@ -11,7 +11,7 @@ project(
 	HOMEPAGE_URL "https://www.youtube.com/channel/UCzp1RaZ3HmejKl723qlKOAw"
 )
 
-psn00bsdk_add_executable(horror STATIC main.c)
+psn00bsdk_add_executable(horror STATIC src/main.c src/display.c)
 
 psn00bsdk_add_cd_image(
 	iso      # Target name
