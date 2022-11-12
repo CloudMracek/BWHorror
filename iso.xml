@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	This file is processed by CMake and used by mkpsxiso to build the CD image.
+
+	NOTE: all paths are relative to the build directory; if you want to include
+	a file from the source tree, you'll have to prepend its path with
+	${PROJECT_SOURCE_DIR}.
+-->
+<iso_project
+	image_name="${CD_IMAGE_NAME}.bin"
+	cue_sheet="${CD_IMAGE_NAME}.cue"
+>
+	<track type="data">
+		<identifiers
+			system			="PLAYSTATION"
+			volume			="BWHORROR"
+			volume_set		="BWHORROR"
+			publisher		="BW"
+			data_preparer	="PSN00BSDK ${PSN00BSDK_VERSION}"
+			application		="PLAYSTATION"
+			copyright		="README.TXT;1"
+		/>
+
+		<license file="${PROJECT_SOURCE_DIR}/LICENSEE.DAT" />
+
+		<directory_tree>
+			<file name="SYSTEM.CNF"		type="data" source="${PROJECT_SOURCE_DIR}/system.cnf" />
+			<file name="HORROR.EXE"	type="data" source="horror.exe" />
+			<file name="HORROR.MAP"	type="data" source="horror.map" />
+
+			<dummy sectors="1024"/>
+		</directory_tree>
+	</track>
+
+	<!--<track type="audio" source="track2.wav" />-->
+</iso_project>
