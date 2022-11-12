@@ -46,8 +46,6 @@ void initDisplay(void) {
     FntOpen(0, 8, 320, 260 , 0, 100);
     #endif
 
-    initInput();
-
     db_active = 0;
     db_nextpri = db[0].p;
 
@@ -57,9 +55,6 @@ void initDisplay(void) {
 }
 
 void display(void) {
-    
-    // Call the game loop
-    (*callback)();
 
     DrawSync(0);
     VSync(0);
@@ -77,6 +72,8 @@ void display(void) {
     FntFlush(-1);
     #endif
 
+    // Call the game loop
+    (*callback)();
 }
 
 void setGameLoopCallback(void (*ptr)()) {

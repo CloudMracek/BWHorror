@@ -8,3 +8,6 @@
 #include "options.h"
 
 void setGameLoopCallback(void (*ptr)());
+
+void initDisplay(void);
+void display(void);
