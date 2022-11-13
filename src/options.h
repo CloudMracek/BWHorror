@@ -17,4 +17,4 @@ changing common variables like screen resolution */
 #define CENTERX			(SCREEN_XRES / 2)
 #define CENTERY			(SCREEN_YRES / 2)
 
-typedef POLY_FT4 QUAD;
+typedef POLY_GT4 QUAD;

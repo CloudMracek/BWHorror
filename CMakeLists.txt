@@ -19,6 +19,7 @@ psn00bsdk_add_executable(horror STATIC
 	src/display.c
 	src/mesh.c
 	src/texture.c
+	src/input.c
 )
 
 psn00bsdk_target_incbin(horror PRIVATE bandwidth_face textures/bandwidth_face.tim)

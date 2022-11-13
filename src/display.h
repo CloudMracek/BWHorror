@@ -6,14 +6,15 @@
 #include <inline_c.h>
 
 #include "options.h"
+#include "input.h"
 
 typedef struct {
     short v0,v1,v2,v3;
 } INDEX;
 
 typedef struct {
-    TIM_IMAGE* tim;
     int texture_size;
+    TIM_IMAGE* tim;
 } TEXTURE;
 
 typedef struct {
