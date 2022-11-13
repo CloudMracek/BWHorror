@@ -1,3 +1,8 @@
 build/
 .vscode/
 LICENSE*.DAT
+*.frag
+*.vert
+*.lua
+pcsx.json
+*.mcd

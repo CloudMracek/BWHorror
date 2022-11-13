@@ -5,13 +5,30 @@ cmake_minimum_required(VERSION 3.20)
 
 project(
 	BWHorror
-	LANGUAGES    C
+	LANGUAGES    C ASM
 	VERSION      1.0.0
 	DESCRIPTION  "Bandwidth horror game"
 	HOMEPAGE_URL "https://www.youtube.com/channel/UCzp1RaZ3HmejKl723qlKOAw"
 )
 
-psn00bsdk_add_executable(horror STATIC src/main.c src/display.c)
+file(GLOB TEXTURES textures/*.tim)
+
+
+psn00bsdk_add_executable(horror STATIC 
+	src/main.c 
+	src/display.c
+	src/mesh.c
+	src/texture.c
+)
+
+psn00bsdk_target_incbin(horror PRIVATE bandwidth_face textures/bandwidth_face.tim)
+
+foreach(TEXTURE ${TEXTURES})
+	get_filename_component(BARENAME ${TEXTURE} NAME)
+	string(REGEX REPLACE "\\.[^.]*$" "" TEXTURE_NAME ${BARENAME})
+	psn00bsdk_target_incbin(horror PRIVATE ${TEXTURE_NAME} ${TEXTURE})
+endforeach()
+
 
 psn00bsdk_add_cd_image(
 	iso      # Target name

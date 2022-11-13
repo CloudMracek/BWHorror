@@ -4,6 +4,8 @@ changing common variables like screen resolution */
 
 #pragma once
 
+#include <stdio.h>
+
 #define LOAD_FONT
 
 #define OT_LEN			4096
@@ -14,3 +16,5 @@ changing common variables like screen resolution */
 
 #define CENTERX			(SCREEN_XRES / 2)
 #define CENTERY			(SCREEN_YRES / 2)
+
+typedef POLY_FT4 QUAD;
