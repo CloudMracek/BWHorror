@@ -20,6 +20,7 @@ SVECTOR cubeRot = {0, 0, 0};
 void gameInit()
 {
     loadTexture(bandwidth_face, &cube.texture);
+    cube.texture.texture_size = 64;
     fillMesh_cube(cube.mesh);
     cube.pos = cubePos;
     cube.rot = cubeRot;

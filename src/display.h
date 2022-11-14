@@ -14,7 +14,7 @@ typedef struct {
 
 typedef struct {
     int texture_size;
-    TIM_IMAGE* tim;
+    TIM_IMAGE tim;
 } TEXTURE;
 
 typedef struct {
@@ -31,7 +31,7 @@ typedef struct {
     VECTOR pos;
     SVECTOR rot;
     MESH *mesh;
-    TEXTURE *texture;
+    TEXTURE texture;
 } OBJECT;
 
 void setGameLoopCallback(void (*ptr)());

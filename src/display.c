@@ -138,17 +138,21 @@ void sortObject(OBJECT *obj)
 		gte_ldv0(&obj->mesh->normal_data[obj->mesh->normal_indices[i]]);
 		gte_ncs();
 		gte_strgb(&pol4->r0);
-		/*pol4->tpage =
-				getTPage(obj->texture->tim->mode, 0, obj->texture->tim->prect->x, obj->texture->tim->prect->y);
-				printf("test3\n");
-		setClut(pol4, obj->texture->tim->crect->x, obj->texture->tim->crect->y);
+		FntPrint(-1, "%d\n", obj->texture.tim.prect->h);
+		pol4->tpage =
+				getTPage(obj->texture.tim.mode, 0, obj->texture.tim.prect->x, obj->texture.tim.prect->y);
+				
+		setClut(pol4, obj->texture.tim.crect->x, obj->texture.tim.prect->y);
 
 		setUV4(pol4,
-					obj->mesh->uv_data[obj->mesh->uv_indices[i].v0].vx, obj->texture->texture_size-1-obj->mesh->uv_data[obj->mesh->uv_indices[i].v0].vy,
-					obj->mesh->uv_data[obj->mesh->uv_indices[i].v1].vx, obj->texture->texture_size-1-obj->mesh->uv_data[obj->mesh->uv_indices[i].v1].vy,
-					obj->mesh->uv_data[obj->mesh->uv_indices[i].v2].vx, obj->texture->texture_size-1-obj->mesh->uv_data[obj->mesh->uv_indices[i].v2].vy,
-					obj->mesh->uv_data[obj->mesh->uv_indices[i].v3].vx, obj->texture->texture_size-1-obj->mesh->uv_data[obj->mesh->uv_indices[i].v3].vy);*/
-		setRGB0(pol4, 255, 0, 0);
+					obj->mesh->uv_data[obj->mesh->uv_indices[i].v0].vx, obj->texture.texture_size - obj->mesh->uv_data[obj->mesh->uv_indices[i].v0].vy,
+					obj->mesh->uv_data[obj->mesh->uv_indices[i].v1].vx, obj->texture.texture_size - obj->mesh->uv_data[obj->mesh->uv_indices[i].v1].vy,
+					obj->mesh->uv_data[obj->mesh->uv_indices[i].v2].vx, obj->texture.texture_size - obj->mesh->uv_data[obj->mesh->uv_indices[i].v2].vy,
+					obj->mesh->uv_data[obj->mesh->uv_indices[i].v3].vx, obj->texture.texture_size - obj->mesh->uv_data[obj->mesh->uv_indices[i].v3].vy);
+		setRGB3(pol4, 255, 255, 255);
+		setRGB2(pol4, 255, 255, 255);
+		setRGB1(pol4, 255, 255, 255);
+		setRGB0(pol4, 255, 255, 255);
 		gte_avsz4();
 		gte_stotz(&p);
 		addPrim(&(db[db_active].ot)[p >> 2], pol4);
