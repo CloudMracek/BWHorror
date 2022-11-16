@@ -13,7 +13,11 @@ int db_active = 0;
 char *db_nextpri;
 RECT screen_clip;
 
-MATRIX omtx, mtx;
+int p_ang = 0;
+
+MATRIX omtx, mtx, lmtx, llmtx;
+
+VECTOR l_point = {0, 0, -10};
 
 void (*callback)();
 
@@ -60,6 +64,10 @@ void initDisplay(void)
 
 void display(void)
 {
+
+	setVector(&l_point, (icos(p_ang) >> 2) >> 2, -350 + (icos(p_ang << 1) >> 4), (isin(p_ang) >> 2) >> 2);
+	p_ang += 16;
+
 	RotMatrix(getCamRot(), &mtx);
 	ApplyMatrixLV(&mtx, getCamPos(), getCamPos());
 	TransMatrix(&mtx, getCamPos());
@@ -94,8 +102,11 @@ void setGameLoopCallback(void (*ptr)())
 
 void sortObject(OBJECT *obj)
 {
-	int i, p;
+	int i, p, intensity;
 	QUAD *pol4;
+	VECTOR v_dir;
+	SVECTOR v_nrm;
+
 	RotMatrix(&obj->rot, &omtx);
 	TransMatrix(&omtx, &obj->pos);
 
@@ -112,54 +123,175 @@ void sortObject(OBJECT *obj)
 		gte_ldv3(&obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v0],
 				 &obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v1],
 				 &obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v2]);
+
+		// Perspective
 		gte_rtpt();
+
+		// Backface culling
 		gte_nclip();
+
 		gte_stopz(&p);
 		// Skip drawing this quad if the first 3 vertices are aligned (p = 0)
 		// or in counterclockwise (p < 0) order.
 		if (p <= 0)
 			continue;
 
-		gte_avsz3();
-		gte_stotz(&p);
-		// Skip drawing this face if it's too far from or too close to the
-		// camera and wouldn't fit in the OT.
-		// if (((p >> 2) <= 0) || ((p >> 2) >= OT_LEN))
-		//	continue;
+		gte_stsxy3(&pol4->x0, &pol4->x1, &pol4->x2);
 
-		setPolyGT4(pol4);
-		gte_stsxy0(&pol4->x0);
-		gte_stsxy1(&pol4->x1);
-		gte_stsxy2(&pol4->x2);
+		// Load last vertex
 		gte_ldv0(&obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v3]);
 		gte_rtps();
-		gte_stsxy(&pol4->x3);
-		gte_ldrgb(&pol4->r0);
-		gte_ldv0(&obj->mesh->normal_data[obj->mesh->normal_indices[i]]);
-		gte_ncs();
-		gte_strgb(&pol4->r0);
-		FntPrint(-1, "%d\n", obj->texture.tim.prect->h);
-		pol4->tpage =
-				getTPage(obj->texture.tim.mode, 0, obj->texture.tim.prect->x, obj->texture.tim.prect->y);
-				
-		setClut(pol4, obj->texture.tim.crect->x, obj->texture.tim.prect->y);
 
-		setUV4(pol4,
-					obj->mesh->uv_data[obj->mesh->uv_indices[i].v0].vx, obj->texture.texture_size - obj->mesh->uv_data[obj->mesh->uv_indices[i].v0].vy,
-					obj->mesh->uv_data[obj->mesh->uv_indices[i].v1].vx, obj->texture.texture_size - obj->mesh->uv_data[obj->mesh->uv_indices[i].v1].vy,
-					obj->mesh->uv_data[obj->mesh->uv_indices[i].v2].vx, obj->texture.texture_size - obj->mesh->uv_data[obj->mesh->uv_indices[i].v2].vy,
-					obj->mesh->uv_data[obj->mesh->uv_indices[i].v3].vx, obj->texture.texture_size - obj->mesh->uv_data[obj->mesh->uv_indices[i].v3].vy);
-		setRGB3(pol4, 255, 255, 255);
-		setRGB2(pol4, 255, 255, 255);
-		setRGB1(pol4, 255, 255, 255);
-		setRGB0(pol4, 255, 255, 255);
+		// Depth sort
 		gte_avsz4();
 		gte_stotz(&p);
+
+		if ((p >> 2) >= OT_LEN)
+			continue;
+
+		gte_stsxy(&pol4->x3);
+
+		setRGB0(pol4, 255,255,255);
+		gte_ldrgb(&pol4->r0);
+		
+
+		gte_ldv0(&obj->mesh->normal_data[obj->mesh->normal_indices[i]]);
+
+		v_dir.vx = l_point.vx - obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v0].vx;
+		v_dir.vy = l_point.vy - obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v0].vy;
+		v_dir.vz = l_point.vz - obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v0].vz;
+
+		intensity = 4096 - ((
+								(v_dir.vx * v_dir.vx) +
+								(v_dir.vy * v_dir.vy) +
+								(v_dir.vz * v_dir.vz)) >>
+							7);
+
+		if (intensity < 0)
+			intensity = 0;
+
+		llmtx.m[0][0] = intensity;
+		llmtx.m[1][0] = intensity;
+		llmtx.m[2][0] = intensity;
+		gte_SetColorMatrix(&llmtx);
+
+		// Normalize light direction and set it to light matrix
+		VectorNormalS(&v_dir, &v_nrm);
+		lmtx.m[0][0] = v_nrm.vx;
+		lmtx.m[0][1] = v_nrm.vy;
+		lmtx.m[0][2] = v_nrm.vz;
+		gte_SetLightMatrix(&lmtx);
+
+		gte_nccs();
+		//////////////////////////////
+		v_dir.vx = l_point.vx - obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v1].vx;
+		v_dir.vy = l_point.vy - obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v1].vy;
+		v_dir.vz = l_point.vz - obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v1].vz;
+
+		intensity = 4096 - ((
+								(v_dir.vx * v_dir.vx) +
+								(v_dir.vy * v_dir.vy) +
+								(v_dir.vz * v_dir.vz)) >>
+							7);
+
+		if (intensity < 0)
+			intensity = 0;
+
+		llmtx.m[0][0] = intensity;
+		llmtx.m[1][0] = intensity;
+		llmtx.m[2][0] = intensity;
+
+		gte_strgb(&pol4->r0);
+
+		gte_SetColorMatrix(&llmtx);
+
+		// Normalize light direction and set it to light matrix
+		VectorNormalS(&v_dir, &v_nrm);
+		lmtx.m[0][0] = v_nrm.vx;
+		lmtx.m[0][1] = v_nrm.vy;
+		lmtx.m[0][2] = v_nrm.vz;
+		gte_SetLightMatrix(&lmtx);
+
+		gte_nccs();
+		//////////////////////////////
+		v_dir.vx = l_point.vx - obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v2].vx;
+		v_dir.vy = l_point.vy - obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v2].vy;
+		v_dir.vz = l_point.vz - obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v2].vz;
+
+		intensity = 4096 - ((
+								(v_dir.vx * v_dir.vx) +
+								(v_dir.vy * v_dir.vy) +
+								(v_dir.vz * v_dir.vz)) >>
+							7);
+
+		if (intensity < 0)
+			intensity = 0;
+
+		llmtx.m[0][0] = intensity;
+		llmtx.m[1][0] = intensity;
+		llmtx.m[2][0] = intensity;
+
+		gte_strgb(&pol4->r1);
+
+		gte_SetColorMatrix(&llmtx);
+
+		// Normalize light direction and set it to light matrix
+		VectorNormalS(&v_dir, &v_nrm);
+		lmtx.m[0][0] = v_nrm.vx;
+		lmtx.m[0][1] = v_nrm.vy;
+		lmtx.m[0][2] = v_nrm.vz;
+		gte_SetLightMatrix(&lmtx);
+
+		gte_nccs();
+		//////////////////////////////
+		v_dir.vx = l_point.vx - obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v3].vx;
+		v_dir.vy = l_point.vy - obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v3].vy;
+		v_dir.vz = l_point.vz - obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v3].vz;
+
+		intensity = 4096 - ((
+								(v_dir.vx * v_dir.vx) +
+								(v_dir.vy * v_dir.vy) +
+								(v_dir.vz * v_dir.vz)) >>
+							7);
+
+		if (intensity < 0)
+			intensity = 0;
+
+		llmtx.m[0][0] = intensity;
+		llmtx.m[1][0] = intensity;
+		llmtx.m[2][0] = intensity;
+
+		gte_strgb(&pol4->r2);
+
+		gte_SetColorMatrix(&llmtx);
+
+		// Normalize light direction and set it to light matrix
+		VectorNormalS(&v_dir, &v_nrm);
+		lmtx.m[0][0] = v_nrm.vx;
+		lmtx.m[0][1] = v_nrm.vy;
+		lmtx.m[0][2] = v_nrm.vz;
+		gte_SetLightMatrix(&lmtx);
+
+		gte_nccs();
+
+		setUV4(pol4,
+			   obj->mesh->uv_data[obj->mesh->uv_indices[i].v0].vx, obj->texture.texture_size - obj->mesh->uv_data[obj->mesh->uv_indices[i].v0].vy,
+			   obj->mesh->uv_data[obj->mesh->uv_indices[i].v1].vx, obj->texture.texture_size - obj->mesh->uv_data[obj->mesh->uv_indices[i].v1].vy,
+			   obj->mesh->uv_data[obj->mesh->uv_indices[i].v2].vx, obj->texture.texture_size - obj->mesh->uv_data[obj->mesh->uv_indices[i].v2].vy,
+			   obj->mesh->uv_data[obj->mesh->uv_indices[i].v3].vx, obj->texture.texture_size - obj->mesh->uv_data[obj->mesh->uv_indices[i].v3].vy);
+
+		pol4->tpage =
+			getTPage(obj->texture.tim.mode, 0, obj->texture.tim.prect->x, obj->texture.tim.prect->y);
+
+		setClut(pol4, obj->texture.tim.crect->x, obj->texture.tim.prect->y);
+				gte_strgb(&pol4->r3);
+		setPolyGT4(pol4);
 		addPrim(&(db[db_active].ot)[p >> 2], pol4);
 
 		pol4++;
 		// if (pol4 >= (db_nextpri + PACKET_LEN))
 		// break;
+
 	}
 
 	db_nextpri = (char *)pol4;
