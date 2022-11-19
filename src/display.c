@@ -13,7 +13,6 @@ int db_active = 0;
 char *db_nextpri;
 RECT screen_clip;
 
-int p_ang = 0;
 
 MATRIX omtx, mtx, lmtx, llmtx;
 
@@ -64,9 +63,6 @@ void initDisplay(void)
 
 void display(void)
 {
-
-	setVector(&l_point, (icos(p_ang) >> 2) >> 2, -350 + (icos(p_ang << 1) >> 4), (isin(p_ang) >> 2) >> 2);
-	p_ang += 16;
 
 	RotMatrix(getCamRot(), &mtx);
 	ApplyMatrixLV(&mtx, getCamPos(), getCamPos());
@@ -154,8 +150,10 @@ void sortObject(OBJECT *obj)
 		setRGB0(pol4, 255,255,255);
 		gte_ldrgb(&pol4->r0);
 		
+		SVECTOR normal;
+		VectorNormalS(&obj->mesh->normal_data[obj->mesh->normal_indices[i]], &normal);
 
-		gte_ldv0(&obj->mesh->normal_data[obj->mesh->normal_indices[i]]);
+		gte_ldv0(&normal);
 
 		v_dir.vx = l_point.vx - obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v0].vx;
 		v_dir.vy = l_point.vy - obj->mesh->vertex_data[obj->mesh->vertex_indices[i].v0].vy;
@@ -296,4 +294,8 @@ void sortObject(OBJECT *obj)
 
 	db_nextpri = (char *)pol4;
 	PopMatrix();
+}
+
+void setLightPosition(VECTOR lightPos) {
+	l_point = lightPos;
 }

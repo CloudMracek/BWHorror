@@ -39,4 +39,6 @@ void setGameLoopCallback(void (*ptr)());
 void initDisplay(void);
 void display(void);
 
+void setLightPosition(VECTOR lightPos);
+
 void sortObject(OBJECT *obj);
