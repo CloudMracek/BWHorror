@@ -30,7 +30,7 @@ typedef struct {
 typedef struct {
     VECTOR pos;
     SVECTOR rot;
-    MESH *mesh;
+    MESH mesh;
     TEXTURE texture;
 } OBJECT;
 

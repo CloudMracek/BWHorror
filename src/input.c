@@ -163,6 +163,15 @@ VECTOR *getCamPos(void)
 	return &tpos;
 }
 
+VECTOR getCamPosWorld(void) 
+{
+	VECTOR negCamPos = {-tpos.vx, -tpos.vy, -tpos.vz};
+	negCamPos.vx = cam_pos.vx >> 12;
+	negCamPos.vy = cam_pos.vy >> 12;
+	negCamPos.vz = cam_pos.vz >> 12;
+	return negCamPos;
+}
+
 SVECTOR *getCamRot(void)
 {
 	return &trot;

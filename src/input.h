@@ -8,4 +8,5 @@ void initInput(void);
 void pollInput(void);
 
 VECTOR* getCamPos(void);
+VECTOR getCamPosWorld(void);
 SVECTOR* getCamRot(void);
