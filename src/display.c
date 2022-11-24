@@ -164,7 +164,10 @@ void sortObject(OBJECT *obj)
 			SVECTOR normal;
 			VectorNormalS(&obj->mesh.normal_data[obj->mesh.normal_indices[i]], &normal);
 
-			gte_ldv0(&obj->mesh.normal_data[obj->mesh.normal_indices[i]]);
+			gte_ldv0(&normal);
+			
+			if(abs(l_point.vx - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v0].vx) < 1000 &&
+			abs(l_point.vz - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v0].vz) < 1000) {
 
 			v_dir.vx = l_point.vx - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v0].vx;
 			v_dir.vy = l_point.vy - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v0].vy;
@@ -282,12 +285,19 @@ void sortObject(OBJECT *obj)
 			gte_SetLightMatrix(&lmtx);
 
 			gte_nccs();
+			}
+			else {
+				setRGB0(pol4, 0, 0, 0);
+				setRGB1(pol4, 0, 0, 0);
+				setRGB2(pol4, 0, 0, 0);
+				setRGB3(pol4, 0, 0, 0);
+			}
 
 			setUV4(pol4,
-				   obj->mesh.uv_data[obj->mesh.uv_indices[i].v0].vx, obj->texture.texture_size - obj->mesh.uv_data[obj->mesh.uv_indices[i].v0].vy,
-				   obj->mesh.uv_data[obj->mesh.uv_indices[i].v1].vx, obj->texture.texture_size - obj->mesh.uv_data[obj->mesh.uv_indices[i].v1].vy,
-				   obj->mesh.uv_data[obj->mesh.uv_indices[i].v2].vx, obj->texture.texture_size - obj->mesh.uv_data[obj->mesh.uv_indices[i].v2].vy,
-				   obj->mesh.uv_data[obj->mesh.uv_indices[i].v3].vx, obj->texture.texture_size - obj->mesh.uv_data[obj->mesh.uv_indices[i].v3].vy);
+				   obj->mesh.uv_data[obj->mesh.uv_indices[i].v0].vx, obj->mesh.uv_data[obj->mesh.uv_indices[i].v0].vy ,
+				   obj->mesh.uv_data[obj->mesh.uv_indices[i].v1].vx,  obj->mesh.uv_data[obj->mesh.uv_indices[i].v1].vy ,
+				   obj->mesh.uv_data[obj->mesh.uv_indices[i].v2].vx, obj->mesh.uv_data[obj->mesh.uv_indices[i].v2].vy ,
+				   obj->mesh.uv_data[obj->mesh.uv_indices[i].v3].vx,  obj->mesh.uv_data[obj->mesh.uv_indices[i].v3].vy );
 
 			pol4->tpage =
 				getTPage(obj->texture.tim.mode, 0, obj->texture.tim.prect->x, obj->texture.tim.prect->y);

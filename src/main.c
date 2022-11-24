@@ -41,7 +41,6 @@ void gameLoop()
 
     setLightPosition(getCamPosWorld());
 
-    cube.pos = getCamPosWorld(); 
 
 
     FntPrint(-1,"Cube: %d %d %d\n", cube.pos.vx, cube.pos.vy, cube.pos.vz);
