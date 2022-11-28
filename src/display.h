@@ -24,7 +24,7 @@ typedef struct {
     SVECTOR *uv_data;
     INDEX *vertex_indices;
     INDEX *uv_indices;
-    int *normal_indices;
+    INDEX *normal_indices;
 } MESH;
 
 typedef struct {

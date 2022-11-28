@@ -27,7 +27,7 @@ void initDisplay(void)
 	SetDefDispEnv(&db[0].disp, 0, 0, SCREEN_XRES, SCREEN_YRES);
 	SetDefDrawEnv(&db[0].draw, 0, SCREEN_YRES, SCREEN_XRES, SCREEN_YRES);
 
-	setRGB0(&db[0].draw, 63, 0, 127);
+	setRGB0(&db[0].draw, 0, 0, 0);
 	db[0].draw.isbg = 1;
 	db[0].draw.dtd = 1;
 
@@ -35,7 +35,7 @@ void initDisplay(void)
 	SetDefDispEnv(&db[1].disp, 0, SCREEN_YRES, SCREEN_XRES, SCREEN_YRES);
 	SetDefDrawEnv(&db[1].draw, 0, 0, SCREEN_XRES, SCREEN_YRES);
 
-	setRGB0(&db[1].draw, 63, 0, 127);
+	setRGB0(&db[1].draw, 0, 0, 0);
 	db[1].draw.isbg = 1;
 	db[1].draw.dtd = 1;
 
@@ -45,7 +45,7 @@ void initDisplay(void)
 	gte_SetGeomOffset(CENTERX, CENTERY);
 	gte_SetGeomScreen(CENTERX);
 
-	gte_SetBackColor(30, 30, 30);
+	gte_SetBackColor(0, 0, 0);
 
 #ifdef LOAD_FONT
 	FntLoad(960, 0);
@@ -162,12 +162,10 @@ void sortObject(OBJECT *obj)
 			gte_ldrgb(&pol4->r0);
 
 			SVECTOR normal;
-			VectorNormalS(&obj->mesh.normal_data[obj->mesh.normal_indices[i]], &normal);
+			VectorNormalS(&obj->mesh.normal_data[(obj->mesh.normal_indices[i]).v0], &normal);
 
 			gte_ldv0(&normal);
 			
-			if(abs(l_point.vx - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v0].vx) < 1000 &&
-			abs(l_point.vz - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v0].vz) < 1000) {
 
 			v_dir.vx = l_point.vx - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v0].vx;
 			v_dir.vy = l_point.vy - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v0].vy;
@@ -285,13 +283,6 @@ void sortObject(OBJECT *obj)
 			gte_SetLightMatrix(&lmtx);
 
 			gte_nccs();
-			}
-			else {
-				setRGB0(pol4, 0, 0, 0);
-				setRGB1(pol4, 0, 0, 0);
-				setRGB2(pol4, 0, 0, 0);
-				setRGB3(pol4, 0, 0, 0);
-			}
 
 			setUV4(pol4,
 				   obj->mesh.uv_data[obj->mesh.uv_indices[i].v0].vx, obj->mesh.uv_data[obj->mesh.uv_indices[i].v0].vy ,
