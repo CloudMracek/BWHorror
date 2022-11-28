@@ -161,10 +161,7 @@ void sortObject(OBJECT *obj)
 			setRGB0(pol4, 255, 255, 255);
 			gte_ldrgb(&pol4->r0);
 
-			SVECTOR normal;
-			VectorNormalS(&obj->mesh.normal_data[(obj->mesh.normal_indices[i]).v0], &normal);
-
-			gte_ldv0(&normal);
+			gte_ldv0(&obj->mesh.normal_data[(obj->mesh.normal_indices[i]).v0]);
 			
 
 			v_dir.vx = l_point.vx - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v0].vx;
