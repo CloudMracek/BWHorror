@@ -45,7 +45,7 @@ void initDisplay(void)
 	gte_SetGeomOffset(CENTERX, CENTERY);
 	gte_SetGeomScreen(CENTERX);
 
-	gte_SetBackColor(100, 100, 100);
+	gte_SetBackColor(0, 0, 0);
 
 #ifdef LOAD_FONT
 	FntLoad(960, 0);
@@ -73,9 +73,7 @@ int display(void)
 	gte_SetTransMatrix(&mtx);
 
 	DrawSync(0);
-	int frame = VSync(-1);
-	deltaTime = frame - lastTime;
-	lastTime = frame;
+	VSync(0);
 
 	db_active ^= 1;
 	db_nextpri = db[db_active].p;
@@ -92,7 +90,7 @@ int display(void)
 
 	// Call the game loop
 	(*callback)();
-	return deltaTime;
+	return 1;
 }
 
 void setGameLoopCallback(void (*ptr)())
@@ -121,9 +119,8 @@ void sortObject(OBJECT *obj)
 	for (i = 0; i < obj->mesh.faces_num; i++)
 	{
 
-		//if (abs(getCamPosWorld().vx - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v0].vx) < 2000 &&
-		//	abs(getCamPosWorld().vz - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v0].vz) < 2000)
-		if(1==1)
+		if (abs(getCamPosWorld().vx - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v0].vx) < 2000 &&
+			abs(getCamPosWorld().vz - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v0].vz) < 2000)
 		{
 
 			v_dir.vx = l_point.vx - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v2].vx;

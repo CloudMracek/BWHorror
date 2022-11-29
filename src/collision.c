@@ -466,15 +466,10 @@ int isPlayerOnMesh(VECTOR* playerPos) {
             bottomRight = collider_vertices[collider_vertex_indices[i].v3];
         }
 
-        if(i == 0) {
-            
-            
-        }
-
         SVECTOR face1 = topLeft;
         SVECTOR face2 = bottomRight;
-        SVECTOR p1 = {playerPos->vx-PLAYER_SIZE, 0, playerPos->vz-PLAYER_SIZE};
-        SVECTOR p2 = {playerPos->vx+PLAYER_SIZE, 0, playerPos->vz+PLAYER_SIZE};
+        SVECTOR p1 = {playerPos->vx-PLAYER_SIZE, 0, playerPos->vz+PLAYER_SIZE};
+        SVECTOR p2 = {playerPos->vx+PLAYER_SIZE, 0, playerPos->vz-PLAYER_SIZE};
         if(isOnMesh(&p1, &p2, &face1, &face2)) {
             isOn = 1;
         }

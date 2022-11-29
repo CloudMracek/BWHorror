@@ -3,7 +3,9 @@
 VECTOR tpos;
 SVECTOR trot;
 
-VECTOR cam_pos;
+VECTOR camPosOld;
+
+VECTOR cam_pos = {0, -600 << 12, 0};;
 VECTOR cam_rot;
 
 PADTYPE *pad;
@@ -18,8 +20,6 @@ void initInput(void)
 
 void pollInput(int deltaTime)
 {
-	VECTOR positon = getCamPosWorld();
-	printf("%d\n", isPlayerOnMesh(&positon));
 	pad = (PADTYPE *)&padBuffer[0][0];
 	// Parse controller input
 	// Divide out fractions of camera rotation
@@ -30,6 +30,14 @@ void pollInput(int deltaTime)
 	tpos.vx = -cam_pos.vx >> 12;
 	tpos.vy = -cam_pos.vy >> 12;
 	tpos.vz = -cam_pos.vz >> 12;
+
+	VECTOR positon = getCamPosWorld();
+	if(!isPlayerOnMesh(&positon)) {
+		cam_pos = camPosOld;
+	}
+
+	camPosOld = cam_pos;
+
 	FntPrint(-1, "X=%d Y=%d Z=%d\n", cam_pos.vx >> 12, cam_pos.vy >> 12,
 			 cam_pos.vz >> 12);
 	FntPrint(-1, "RX=%d RY=%d\n", cam_rot.vx >> 12, cam_rot.vy >> 12);
@@ -45,13 +53,13 @@ void pollInput(int deltaTime)
 			// so 0 means pressed in this case
 
 			// Look controls
-			if (!(pad->btn & PAD_UP))
+			if (!(pad->btn & PAD_UP) && trot.vx > -1024)
 			{
 
 				// Look up
 				cam_rot.vx -= deltaTime * ONE * 16;
 			}
-			else if (!(pad->btn & PAD_DOWN))
+			else if (!(pad->btn & PAD_DOWN) && trot.vx < 1024)
 			{
 
 				// Look down
@@ -76,9 +84,8 @@ void pollInput(int deltaTime)
 			{
 
 				// Move forward
-				cam_pos.vx -= deltaTime * ((isin(trot.vy) * icos(trot.vx)) >> 12) << 4;
-				cam_pos.vy += deltaTime * isin(trot.vx) << 4;
-				cam_pos.vz += deltaTime * ((icos(trot.vy) * icos(trot.vx)) >> 12) << 4;
+				cam_pos.vx -= deltaTime * isin(trot.vy) << 4;
+				cam_pos.vz += deltaTime * icos(trot.vy) << 4;
 			}
 			else if (!(pad->btn & PAD_CROSS))
 			{
@@ -102,24 +109,6 @@ void pollInput(int deltaTime)
 				// Slide right
 				cam_pos.vx += deltaTime * icos(trot.vy) << 4;
 				cam_pos.vz += deltaTime * isin(trot.vy) << 4;
-			}
-
-			if (!(pad->btn & PAD_R1))
-			{
-
-				// Slide up
-				cam_pos.vx -= deltaTime * ((isin(trot.vy) * isin(trot.vx)) >> 12) << 4;
-				cam_pos.vy -= deltaTime * icos(trot.vx) << 4;
-				cam_pos.vz += deltaTime * ((icos(trot.vy) * isin(trot.vx)) >> 12) << 4;
-			}
-
-			if (!(pad->btn & PAD_R2))
-			{
-
-				// Slide down
-				cam_pos.vx += deltaTime * ((isin(trot.vy) * isin(trot.vx)) >> 12) << 4;
-				cam_pos.vy += deltaTime * icos(trot.vx) << 4;
-				cam_pos.vz -= deltaTime * ((icos(trot.vy) * isin(trot.vx)) >> 12) << 4;
 			}
 		}
 
