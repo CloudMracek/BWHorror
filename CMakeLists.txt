@@ -24,6 +24,7 @@ psn00bsdk_add_executable(horror STATIC
 )
 
 psn00bsdk_target_incbin(horror PRIVATE bandwidth_face textures/bandwidth_face.tim)
+psn00bsdk_target_incbin(horror PRIVATE duch textures/duch.tim)
 
 foreach(TEXTURE ${TEXTURES})
 	get_filename_component(BARENAME ${TEXTURE} NAME)

@@ -119,13 +119,13 @@ void sortObject(OBJECT *obj)
 	for (i = 0; i < obj->mesh.faces_num; i++)
 	{
 
-		if (abs(getCamPosWorld().vx - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v0].vx) < 2000 &&
-			abs(getCamPosWorld().vz - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v0].vz) < 2000)
+		if (abs(getCamPosWorld().vx - obj->pos.vx - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v0].vx) < 2000 &&
+			abs(getCamPosWorld().vz - obj->pos.vz - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v0].vz) < 2000)
 		{
 
-			v_dir.vx = l_point.vx - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v2].vx;
-			v_dir.vy = l_point.vy - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v2].vy;
-			v_dir.vz = l_point.vz - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v2].vz;
+			v_dir.vx = l_point.vx - obj->pos.vx - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v2].vx;
+			v_dir.vy = l_point.vy - obj->pos.vy - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v2].vy;
+			v_dir.vz = l_point.vz - obj->pos.vz - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v2].vz;
 
 
 			gte_ldv3(&obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v0],
@@ -167,9 +167,9 @@ void sortObject(OBJECT *obj)
 			gte_ldv0(&obj->mesh.normal_data[(obj->mesh.normal_indices[i]).v0]);
 			
 
-			v_dir.vx = l_point.vx - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v0].vx;
-			v_dir.vy = l_point.vy - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v0].vy;
-			v_dir.vz = l_point.vz - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v0].vz;
+			v_dir.vx = l_point.vx - obj->pos.vx - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v0].vx;
+			v_dir.vy = l_point.vy - obj->pos.vy - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v0].vy;
+			v_dir.vz = l_point.vz - obj->pos.vz - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v0].vz;
 
 			intensity = 4096*4 - ((
 									(v_dir.vx * v_dir.vx) +
@@ -194,9 +194,9 @@ void sortObject(OBJECT *obj)
 
 			gte_nccs();
 			//////////////////////////////
-			v_dir.vx = l_point.vx - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v1].vx;
-			v_dir.vy = l_point.vy - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v1].vy;
-			v_dir.vz = l_point.vz - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v1].vz;
+			v_dir.vx = l_point.vx - obj->pos.vx - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v1].vx;
+			v_dir.vy = l_point.vy - obj->pos.vy - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v1].vy;
+			v_dir.vz = l_point.vz - obj->pos.vz - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v1].vz;
 
 			intensity = 4096*4 - ((
 									(v_dir.vx * v_dir.vx) +
@@ -224,9 +224,9 @@ void sortObject(OBJECT *obj)
 
 			gte_nccs();
 			//////////////////////////////
-			v_dir.vx = l_point.vx - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v2].vx;
-			v_dir.vy = l_point.vy - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v2].vy;
-			v_dir.vz = l_point.vz - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v2].vz;
+			v_dir.vx = l_point.vx - obj->pos.vx - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v2].vx;
+			v_dir.vy = l_point.vy - obj->pos.vy - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v2].vy;
+			v_dir.vz = l_point.vz - obj->pos.vz - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v2].vz;
 
 			intensity = 4096*4 - ((
 									(v_dir.vx * v_dir.vx) +
@@ -254,9 +254,9 @@ void sortObject(OBJECT *obj)
 
 			gte_nccs();
 			//////////////////////////////
-			v_dir.vx = l_point.vx - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v3].vx;
-			v_dir.vy = l_point.vy - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v3].vy;
-			v_dir.vz = l_point.vz - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v3].vz;
+			v_dir.vx = l_point.vx - obj->pos.vx - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v3].vx;
+			v_dir.vy = l_point.vy - obj->pos.vy - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v3].vy;
+			v_dir.vz = l_point.vz - obj->pos.vz - obj->mesh.vertex_data[obj->mesh.vertex_indices[i].v3].vz;
 
 			intensity = 4096*4 - ((
 									(v_dir.vx * v_dir.vx) +
@@ -285,10 +285,10 @@ void sortObject(OBJECT *obj)
 			gte_nccs();
 
 			setUV4(pol4,
-				   obj->mesh.uv_data[obj->mesh.uv_indices[i].v0].vx, obj->mesh.uv_data[obj->mesh.uv_indices[i].v0].vy ,
-				   obj->mesh.uv_data[obj->mesh.uv_indices[i].v1].vx,  obj->mesh.uv_data[obj->mesh.uv_indices[i].v1].vy ,
-				   obj->mesh.uv_data[obj->mesh.uv_indices[i].v2].vx, obj->mesh.uv_data[obj->mesh.uv_indices[i].v2].vy ,
-				   obj->mesh.uv_data[obj->mesh.uv_indices[i].v3].vx,  obj->mesh.uv_data[obj->mesh.uv_indices[i].v3].vy );
+				   obj->mesh.uv_data[obj->mesh.uv_indices[i].v0].vx, obj->texture.texture_size - 1 - obj->mesh.uv_data[obj->mesh.uv_indices[i].v0].vy ,
+				   obj->mesh.uv_data[obj->mesh.uv_indices[i].v1].vx,  obj->texture.texture_size - 1 - obj->mesh.uv_data[obj->mesh.uv_indices[i].v1].vy ,
+				   obj->mesh.uv_data[obj->mesh.uv_indices[i].v2].vx, obj->texture.texture_size - 1 - obj->mesh.uv_data[obj->mesh.uv_indices[i].v2].vy ,
+				   obj->mesh.uv_data[obj->mesh.uv_indices[i].v3].vx,  obj->texture.texture_size - 1 - obj->mesh.uv_data[obj->mesh.uv_indices[i].v3].vy );
 
 			pol4->tpage =
 				getTPage(obj->texture.tim.mode, 0, obj->texture.tim.prect->x, obj->texture.tim.prect->y);
