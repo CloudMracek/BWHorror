@@ -16,8 +16,10 @@ void initInput(void)
 	ChangeClearPAD(0);
 }
 
-void pollInput(void)
+void pollInput(int deltaTime)
 {
+	VECTOR positon = getCamPosWorld();
+	printf("%d\n", isPlayerOnMesh(&positon));
 	pad = (PADTYPE *)&padBuffer[0][0];
 	// Parse controller input
 	// Divide out fractions of camera rotation
@@ -47,26 +49,26 @@ void pollInput(void)
 			{
 
 				// Look up
-				cam_rot.vx -= ONE * 8;
+				cam_rot.vx -= deltaTime * ONE * 16;
 			}
 			else if (!(pad->btn & PAD_DOWN))
 			{
 
 				// Look down
-				cam_rot.vx += ONE * 8;
+				cam_rot.vx += deltaTime * ONE * 16;
 			}
 
 			if (!(pad->btn & PAD_LEFT))
 			{
 
 				// Look left
-				cam_rot.vy += ONE * 8;
+				cam_rot.vy += deltaTime * ONE * 16;
 			}
 			else if (!(pad->btn & PAD_RIGHT))
 			{
 
 				// Look right
-				cam_rot.vy -= ONE * 8;
+				cam_rot.vy -= deltaTime * ONE * 16;
 			}
 
 			// Movement controls
@@ -74,50 +76,50 @@ void pollInput(void)
 			{
 
 				// Move forward
-				cam_pos.vx -= ((isin(trot.vy) * icos(trot.vx)) >> 12) << 2;
-				cam_pos.vy += isin(trot.vx) << 2;
-				cam_pos.vz += ((icos(trot.vy) * icos(trot.vx)) >> 12) << 2;
+				cam_pos.vx -= deltaTime * ((isin(trot.vy) * icos(trot.vx)) >> 12) << 4;
+				cam_pos.vy += deltaTime * isin(trot.vx) << 4;
+				cam_pos.vz += deltaTime * ((icos(trot.vy) * icos(trot.vx)) >> 12) << 4;
 			}
 			else if (!(pad->btn & PAD_CROSS))
 			{
 
 				// Move backward
-				cam_pos.vx += ((isin(trot.vy) * icos(trot.vx)) >> 12) << 2;
-				cam_pos.vy -= isin(trot.vx) << 2;
-				cam_pos.vz -= ((icos(trot.vy) * icos(trot.vx)) >> 12) << 2;
+				cam_pos.vx += deltaTime * ((isin(trot.vy) * icos(trot.vx)) >> 12) << 4;
+				cam_pos.vy -= deltaTime * isin(trot.vx) << 4;
+				cam_pos.vz -= deltaTime * ((icos(trot.vy) * icos(trot.vx)) >> 12) << 4;
 			}
 
 			if (!(pad->btn & PAD_SQUARE))
 			{
 
 				// Slide left
-				cam_pos.vx -= icos(trot.vy) << 2;
-				cam_pos.vz -= isin(trot.vy) << 2;
+				cam_pos.vx -= deltaTime * icos(trot.vy) << 4;
+				cam_pos.vz -= deltaTime * isin(trot.vy) << 4;
 			}
 			else if (!(pad->btn & PAD_CIRCLE))
 			{
 
 				// Slide right
-				cam_pos.vx += icos(trot.vy) << 2;
-				cam_pos.vz += isin(trot.vy) << 2;
+				cam_pos.vx += deltaTime * icos(trot.vy) << 4;
+				cam_pos.vz += deltaTime * isin(trot.vy) << 4;
 			}
 
 			if (!(pad->btn & PAD_R1))
 			{
 
 				// Slide up
-				cam_pos.vx -= ((isin(trot.vy) * isin(trot.vx)) >> 12) << 2;
-				cam_pos.vy -= icos(trot.vx) << 2;
-				cam_pos.vz += ((icos(trot.vy) * isin(trot.vx)) >> 12) << 2;
+				cam_pos.vx -= deltaTime * ((isin(trot.vy) * isin(trot.vx)) >> 12) << 4;
+				cam_pos.vy -= deltaTime * icos(trot.vx) << 4;
+				cam_pos.vz += deltaTime * ((icos(trot.vy) * isin(trot.vx)) >> 12) << 4;
 			}
 
 			if (!(pad->btn & PAD_R2))
 			{
 
 				// Slide down
-				cam_pos.vx += ((isin(trot.vy) * isin(trot.vx)) >> 12) << 2;
-				cam_pos.vy += icos(trot.vx) << 2;
-				cam_pos.vz -= ((icos(trot.vy) * isin(trot.vx)) >> 12) << 2;
+				cam_pos.vx += deltaTime * ((isin(trot.vy) * isin(trot.vx)) >> 12) << 4;
+				cam_pos.vy += deltaTime * icos(trot.vx) << 4;
+				cam_pos.vz -= deltaTime * ((icos(trot.vy) * isin(trot.vx)) >> 12) << 4;
 			}
 		}
 
@@ -129,30 +131,30 @@ void pollInput(void)
 			if (((pad->ls_y - 128) < -16) || ((pad->ls_y - 128) > 16))
 			{
 
-				cam_pos.vx +=
+				cam_pos.vx += deltaTime *
 					(((isin(trot.vy) * icos(trot.vx)) >> 12) * (pad->ls_y - 128)) >> 5;
-				cam_pos.vy -= (isin(trot.vx) * (pad->ls_y - 128)) >> 5;
-				cam_pos.vz -=
+				cam_pos.vy -= deltaTime * (isin(trot.vx) * (pad->ls_y - 128)) >> 5;
+				cam_pos.vz -= deltaTime *
 					(((icos(trot.vy) * icos(trot.vx)) >> 12) * (pad->ls_y - 128)) >> 5;
 			}
 
 			// Strafing left and right
 			if (((pad->ls_x - 128) < -16) || ((pad->ls_x - 128) > 16))
 			{
-				cam_pos.vx += (icos(trot.vy) * (pad->ls_x - 128)) >> 5;
-				cam_pos.vz += (isin(trot.vy) * (pad->ls_x - 128)) >> 5;
+				cam_pos.vx += deltaTime * (icos(trot.vy) * (pad->ls_x - 128)) >> 5;
+				cam_pos.vz += deltaTime * (isin(trot.vy) * (pad->ls_x - 128)) >> 5;
 			}
 
 			// Look up and down
 			if (((pad->rs_y - 128) < -16) || ((pad->rs_y - 128) > 16))
 			{
-				cam_rot.vx += (pad->rs_y - 128) << 9;
+				cam_rot.vx += deltaTime * (pad->rs_y - 128) << 9;
 			}
 
 			// Look left and right
 			if (((pad->rs_x - 128) < -16) || ((pad->rs_x - 128) > 16))
 			{
-				cam_rot.vy -= (pad->rs_x - 128) << 9;
+				cam_rot.vy -= deltaTime * (pad->rs_x - 128) << 9;
 			}
 		}
 	}

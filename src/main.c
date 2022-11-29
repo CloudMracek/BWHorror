@@ -55,6 +55,7 @@ void gameLoop()
     }
 }
 
+int deltaTime;
 int main(int argc, const char *argv[])
 {
     initDisplay();
@@ -63,7 +64,7 @@ int main(int argc, const char *argv[])
     setGameLoopCallback(&gameLoop);
     while (true)
     {
-        display();
-        pollInput();
+        deltaTime = display();
+        pollInput(deltaTime);
     }
 }

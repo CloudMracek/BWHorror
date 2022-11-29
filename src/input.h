@@ -3,9 +3,11 @@
 #include <psxpad.h>
 #include <stdio.h>
 
+#include "collision.h"
+
 void initInput(void);
 
-void pollInput(void);
+void pollInput(int deltaTime);
 
 VECTOR* getCamPos(void);
 VECTOR getCamPosWorld(void);
