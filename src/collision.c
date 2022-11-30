@@ -436,6 +436,8 @@ int isPlayerOnMesh(VECTOR* playerPos) {
     int isOn = 0;
     for(int i = 0; i < collider_faces; i++) {
         
+        // This is not consistent. We need to calculate this. Will do it in game setup. For now we do it every frame ¯\_(ツ)_/¯
+
         SVECTOR topLeft = collider_vertices[collider_vertex_indices[i].v0];
         SVECTOR bottomRight = collider_vertices[collider_vertex_indices[i].v0];
         if(collider_vertices[collider_vertex_indices[i].v0].vx <= topLeft.vx && collider_vertices[collider_vertex_indices[i].v0].vz >= topLeft.vz) {

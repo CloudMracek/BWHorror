@@ -1,6 +1,7 @@
 #pragma once
 #include <psxgte.h>
 #include <psxpad.h>
+#include <psxspu.h>
 #include <stdio.h>
 
 #include "collision.h"

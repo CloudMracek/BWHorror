@@ -5,11 +5,14 @@ SVECTOR trot;
 
 VECTOR camPosOld;
 
-VECTOR cam_pos = {0, -600 << 12, 0};;
-VECTOR cam_rot;
+VECTOR cam_pos = {-350 << 12, -600 << 12, 0};
+;
+VECTOR cam_rot = {0, 1024 << 12, 0};
 
 PADTYPE *pad;
 uint8_t padBuffer[2][34];
+
+int movesPrev = 1;
 
 void initInput(void)
 {
@@ -31,8 +34,11 @@ void pollInput(int deltaTime)
 	tpos.vy = -cam_pos.vy >> 12;
 	tpos.vz = -cam_pos.vz >> 12;
 
+	int moves = 0;
+
 	VECTOR positon = getCamPosWorld();
-	if(!isPlayerOnMesh(&positon)) {
+	if (!isPlayerOnMesh(&positon))
+	{
 		cam_pos = camPosOld;
 	}
 
@@ -86,14 +92,15 @@ void pollInput(int deltaTime)
 				// Move forward
 				cam_pos.vx -= deltaTime * isin(trot.vy) << 4;
 				cam_pos.vz += deltaTime * icos(trot.vy) << 4;
+				moves = 1;
 			}
 			else if (!(pad->btn & PAD_CROSS))
 			{
 
 				// Move backward
-				cam_pos.vx += deltaTime * ((isin(trot.vy) * icos(trot.vx)) >> 12) << 4;
-				cam_pos.vy -= deltaTime * isin(trot.vx) << 4;
-				cam_pos.vz -= deltaTime * ((icos(trot.vy) * icos(trot.vx)) >> 12) << 4;
+				cam_pos.vx += deltaTime * isin(trot.vy) << 4;
+				cam_pos.vz -= deltaTime * icos(trot.vy) << 4;
+				moves = 1;
 			}
 
 			if (!(pad->btn & PAD_SQUARE))
@@ -102,6 +109,7 @@ void pollInput(int deltaTime)
 				// Slide left
 				cam_pos.vx -= deltaTime * icos(trot.vy) << 4;
 				cam_pos.vz -= deltaTime * isin(trot.vy) << 4;
+				moves = 1;
 			}
 			else if (!(pad->btn & PAD_CIRCLE))
 			{
@@ -109,6 +117,7 @@ void pollInput(int deltaTime)
 				// Slide right
 				cam_pos.vx += deltaTime * icos(trot.vy) << 4;
 				cam_pos.vz += deltaTime * isin(trot.vy) << 4;
+				moves = 1;
 			}
 		}
 
@@ -121,10 +130,12 @@ void pollInput(int deltaTime)
 			{
 
 				cam_pos.vx += deltaTime *
-					(((isin(trot.vy) * icos(trot.vx)) >> 12) * (pad->ls_y - 128)) >> 5;
+								  (((isin(trot.vy) * icos(trot.vx)) >> 12) * (pad->ls_y - 128)) >>
+							  5;
 				cam_pos.vy -= deltaTime * (isin(trot.vx) * (pad->ls_y - 128)) >> 5;
 				cam_pos.vz -= deltaTime *
-					(((icos(trot.vy) * icos(trot.vx)) >> 12) * (pad->ls_y - 128)) >> 5;
+								  (((icos(trot.vy) * icos(trot.vx)) >> 12) * (pad->ls_y - 128)) >>
+							  5;
 			}
 
 			// Strafing left and right
@@ -146,6 +157,16 @@ void pollInput(int deltaTime)
 				cam_rot.vy -= deltaTime * (pad->rs_x - 128) << 9;
 			}
 		}
+		if (moves == 1 && movesPrev == 0)
+		{
+			SpuSetKey(1, 1 << 0);
+			movesPrev = 1;
+		}
+		else if(moves == 0 && movesPrev == 1)
+		{
+			SpuSetKey(0, 1 << 0);
+			movesPrev = 0;
+		}
 	}
 }
 
@@ -154,7 +175,7 @@ VECTOR *getCamPos(void)
 	return &tpos;
 }
 
-VECTOR getCamPosWorld(void) 
+VECTOR getCamPosWorld(void)
 {
 	VECTOR negCamPos = {-tpos.vx, -tpos.vy, -tpos.vz};
 	negCamPos.vx = cam_pos.vx >> 12;

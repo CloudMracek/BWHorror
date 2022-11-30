@@ -21,10 +21,13 @@ psn00bsdk_add_executable(horror STATIC
 	src/texture.c
 	src/input.c
 	src/collision.c
+	src/sound.c
 )
 
 psn00bsdk_target_incbin(horror PRIVATE bandwidth_face textures/bandwidth_face.tim)
 psn00bsdk_target_incbin(horror PRIVATE duch textures/duch.tim)
+
+psn00bsdk_target_incbin(horror PRIVATE steps sounds/steps.vag)
 
 foreach(TEXTURE ${TEXTURES})
 	get_filename_component(BARENAME ${TEXTURE} NAME)
