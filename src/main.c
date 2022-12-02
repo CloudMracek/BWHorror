@@ -1,3 +1,9 @@
+/* 
+    This entire thing is written terribly.
+    There is a lot of unnecesssary data copying.
+    Too bad.
+*/
+
 #include <sys/types.h>
 #include <psxetc.h>
 #include <psxgte.h>
@@ -13,22 +19,17 @@
 #include "../meshes/maze.c"
 #include "../meshes/duch.c"
 
-extern const uint32_t bandwidth_face[];
+extern const uint32_t maze_tex[];
 extern const uint32_t duch[];
 
 extern const uint32_t steps[];
 extern const uint32_t yay[];
 extern const uint32_t victory[];
 
-int i = 0;
-int p_ang = 0;
-
 int ghostCount = 0;
 
-OBJECT maze;
-OBJECT cube;
-VECTOR cubePos = {0, 0, 0};
-SVECTOR cubeRot = {0, 0, 0};
+OBJECT mazeO;
+
 VECTOR light_point;
 
 OBJECT duch0;
@@ -91,7 +92,7 @@ void duchCollision()
         if (ghostCount != 5)
             play_sample(yay_addr, yay_sr);
     }
-    if (ghostCount == 1)
+    if (ghostCount == 5)
     {
         endGame();
     }
@@ -125,15 +126,11 @@ void endGame()
 
 void gameInit()
 {
-    loadTexture(bandwidth_face, &cube.texture);
-    cube.texture.texture_size = 64;
-    fillMesh_cube(&cube.mesh);
-
     duch0.texture.texture_size = 64;
 
-    fillMesh_maze(&maze.mesh);
-    maze.texture = cube.texture;
-    maze.texture.texture_size = 128;
+    fillMesh_maze(&mazeO.mesh);
+    loadTexture(maze_tex, &mazeO.texture);
+    mazeO.texture.texture_size = 128;
 
     loadTexture(duch, &duch0.texture);
     fillMesh_duch(&duch0.mesh);
@@ -206,8 +203,6 @@ void gameInit()
 
 void gameLoop()
 {
-    setVector(&light_point, (icos(p_ang) >> 2) >> 2, -350, (isin(p_ang) >> 2) >> 2);
-    p_ang += 16;
     setLightPosition(getCamPosWorld());
 
     duchCollision();
@@ -219,12 +214,7 @@ void gameLoop()
     sortObject(&duch2);
     sortObject(&duch3);
     sortObject(&duch4);
-    sortObject(&maze);
-    i++;
-    if (i > 50)
-    {
-        i = 0;
-    }
+    sortObject(&mazeO);
 }
 
 int deltaTime;

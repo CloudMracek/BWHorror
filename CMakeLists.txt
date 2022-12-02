@@ -24,7 +24,7 @@ psn00bsdk_add_executable(horror STATIC
 	src/sound.c
 )
 
-psn00bsdk_target_incbin(horror PRIVATE bandwidth_face textures/bandwidth_face.tim)
+psn00bsdk_target_incbin(horror PRIVATE maze_tex textures/maze.tim)
 psn00bsdk_target_incbin(horror PRIVATE duch textures/duch.tim)
 
 psn00bsdk_target_incbin(horror PRIVATE steps sounds/steps.vag)
