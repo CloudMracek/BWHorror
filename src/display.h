@@ -37,7 +37,7 @@ typedef struct {
 void setGameLoopCallback(void (*ptr)());
 
 void initDisplay(void);
-int display(void);
+int display(int dontCallCallback);
 
 void setLightPosition(VECTOR lightPos);
 

@@ -12,4 +12,6 @@ void pollInput(int deltaTime);
 
 VECTOR* getCamPos(void);
 VECTOR getCamPosWorld(void);
+void setCamPos(VECTOR pos);
 SVECTOR* getCamRot(void);
+void setCamRot(VECTOR rot);

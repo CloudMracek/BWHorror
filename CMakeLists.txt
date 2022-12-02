@@ -28,6 +28,8 @@ psn00bsdk_target_incbin(horror PRIVATE bandwidth_face textures/bandwidth_face.ti
 psn00bsdk_target_incbin(horror PRIVATE duch textures/duch.tim)
 
 psn00bsdk_target_incbin(horror PRIVATE steps sounds/steps.vag)
+psn00bsdk_target_incbin(horror PRIVATE yay sounds/yay.vag)
+psn00bsdk_target_incbin(horror PRIVATE victory sounds/victory.vag)
 
 foreach(TEXTURE ${TEXTURES})
 	get_filename_component(BARENAME ${TEXTURE} NAME)

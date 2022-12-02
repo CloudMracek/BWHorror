@@ -9,6 +9,7 @@
 
 static int next_sample_addr = ALLOC_START_ADDR;
 static int next_channel = 0;
+static int skipChannel0 = 0;
 
 int upload_sample(const void *data, int size)
 {
@@ -30,6 +31,9 @@ int upload_sample(const void *data, int size)
 int play_sample(int addr, int sample_rate)
 {
 	int ch = next_channel;
+	if(skipChannel0 && ch == 0) {
+		ch = 1;
+	}
 
 	// Make sure the channel is stopped.
 	SpuSetKey(0, 1 << ch);
@@ -51,6 +55,10 @@ int play_sample(int addr, int sample_rate)
 
 	// Start the channel.
 	SpuSetKey(1, 1 << ch);
+
+	if(ch==0) {
+		skipChannel0 = 1;
+	}
 
 	next_channel = (ch + 1) % 24;
 	return ch;

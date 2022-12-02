@@ -6,7 +6,7 @@ SVECTOR trot;
 VECTOR camPosOld;
 
 VECTOR cam_pos = {-350 << 12, -600 << 12, 0};
-;
+
 VECTOR cam_rot = {0, 1024 << 12, 0};
 
 PADTYPE *pad;
@@ -184,7 +184,15 @@ VECTOR getCamPosWorld(void)
 	return negCamPos;
 }
 
+void setCamPos(VECTOR pos) {
+	cam_pos = pos;
+}
+
 SVECTOR *getCamRot(void)
 {
 	return &trot;
+}
+
+void setCamRot(VECTOR rot) {
+	cam_rot = rot;
 }

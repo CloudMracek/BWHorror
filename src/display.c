@@ -111,7 +111,7 @@ void initDisplay(void)
 
 int lastTime = 0;
 
-int display(void)
+int display(int dontCallCallback)
 {
 	int deltaTime;
 	RotMatrix(getCamRot(), &mtx);
@@ -137,8 +137,10 @@ int display(void)
 	FntFlush(-1);
 #endif
 
+	if(!dontCallCallback) {
 	// Call the game loop
-	(*callback)();
+		(*callback)();
+	}
 	return 1;
 }
 
