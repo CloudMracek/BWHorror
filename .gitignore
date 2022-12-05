@@ -1,3 +1,5 @@
+CMakeCache.*
+CMakeFiles/
 build/
 .vscode/
 LICENSE*.DAT
