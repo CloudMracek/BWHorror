@@ -1,0 +1,30 @@
+name: Build game (no ISO)
+
+on: push
+
+env:
+  PSn00bSDK_REPO: "https://github.com/spicyjpeg/PSn00bSDK"
+  PSn00bSDK_VERSION: "0.21"
+
+jobs:
+  build:
+    permissions:
+      contents: read
+
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Prepare PSn00bSDK
+        run: |
+          mkdir ~/.sdk
+          cd ~/.sdk
+
+          wget ${PSn00bSDK_REPO}/releases/download/v${PSn00bSDK_VERSION}/PSn00bSDK-${PSn00bSDK_VERSION}-Linux.zip
+          unzip PSn00bSDK-${PSn00bSDK_VERSION}-Linux.zip
+          rm PSn00bSDK-${PSn00bSDK_VERSION}-Linux.zip
+
+          cd -
+      - name: Build target horror
+        run: |
+          export PSN00BSDK_INSTALL_DIR=~/.sdk/PSn00bSDK-${PSn00bSDK_VERSION}-Linux
+          ./build.sh horror
