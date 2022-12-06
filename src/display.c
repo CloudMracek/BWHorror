@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #include "display.h"
 
 typedef struct
@@ -104,7 +106,7 @@ void initDisplay(void)
 	db_active = 0;
 	db_nextpri = db[0].p;
 
-	ClearOTagR(db[db_active].ot, OT_LEN);
+	ClearOTagR((uint32_t *)(db[db_active].ot), OT_LEN);
 	PutDrawEnv(&(db[0].draw));
 	SetDispMask(1);
 }
@@ -127,11 +129,11 @@ int display(int dontCallCallback)
 	db_active ^= 1;
 	db_nextpri = db[db_active].p;
 
-	ClearOTagR(db[db_active].ot, OT_LEN);
+	ClearOTagR((uint32_t *)(db[db_active].ot), OT_LEN);
 	PutDrawEnv(&(db[db_active].draw));
 	PutDispEnv(&(db[db_active].disp));
 
-	DrawOTag(db[db_active ^ 1].ot + (OT_LEN - 1));
+	DrawOTag((uint32_t *)(db[db_active ^ 1].ot + (OT_LEN - 1)));
 
 #ifdef LOAD_FONT
 	FntFlush(-1);

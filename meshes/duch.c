@@ -319,10 +319,10 @@ INDEX duch_uv_indices[] = {
 void fillMesh_duch(MESH* mesh) {
   mesh->faces_num = duch_faces;
 
-  mesh->normal_data = &duch_normals;
-  mesh->normal_indices = &duch_normal_indices;
-  mesh->uv_data = &duch_uvs;
-  mesh->uv_indices = &duch_uv_indices;
-  mesh->vertex_data = &duch_vertices;
-  mesh->vertex_indices = &duch_vertex_indices;
+  mesh->normal_data = duch_normals;
+  mesh->normal_indices = duch_normal_indices;
+  mesh->uv_data = duch_uvs;
+  mesh->uv_indices = duch_uv_indices;
+  mesh->vertex_data = duch_vertices;
+  mesh->vertex_indices = duch_vertex_indices;
 }
