@@ -4,6 +4,7 @@
     Too bad.
 */
 
+#include <stdlib.h>
 #include <sys/types.h>
 #include <psxetc.h>
 #include <psxgte.h>
@@ -54,6 +55,8 @@ int yay_sr;
 
 int victory_addr;
 int victory_sr;
+
+void endGame();
 
 void duchCollision()
 {

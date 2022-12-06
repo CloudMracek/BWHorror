@@ -1,4 +1,4 @@
 #include "display.h"
 
-void loadTexture(uint32_t* textureData, TEXTURE* texture);
+void loadTexture(const uint32_t* textureData, TEXTURE* texture);
 

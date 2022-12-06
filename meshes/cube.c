@@ -78,10 +78,10 @@ INDEX cube_uv_indices[] = {
 void fillMesh_cube(MESH* mesh) {
   mesh->faces_num = cube_faces;
 
-  mesh->normal_data = &cube_normals;
-  mesh->normal_indices = &cube_normal_indices;
-  mesh->uv_data = &cube_uvs;
-  mesh->uv_indices = &cube_uv_indices;
-  mesh->vertex_data = &cube_vertices;
-  mesh->vertex_indices = &cube_vertex_indices;
+  mesh->normal_data = cube_normals;
+  mesh->normal_indices = cube_normal_indices;
+  mesh->uv_data = cube_uvs;
+  mesh->uv_indices = cube_uv_indices;
+  mesh->vertex_data = cube_vertices;
+  mesh->vertex_indices = cube_vertex_indices;
 }

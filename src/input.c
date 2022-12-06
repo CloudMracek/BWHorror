@@ -1,4 +1,5 @@
 #include "input.h"
+#include <psxapi.h>
 
 VECTOR tpos;
 SVECTOR trot;

@@ -13378,10 +13378,10 @@ INDEX maze_uv_indices[] = {
 void fillMesh_maze(MESH* mesh) {
   mesh->faces_num = maze_faces;
 
-  mesh->normal_data = &maze_normals;
-  mesh->normal_indices = &maze_normal_indices;
-  mesh->uv_data = &maze_uvs;
-  mesh->uv_indices = &maze_uv_indices;
-  mesh->vertex_data = &maze_vertices;
-  mesh->vertex_indices = &maze_vertex_indices;
+  mesh->normal_data = maze_normals;
+  mesh->normal_indices = maze_normal_indices;
+  mesh->uv_data = maze_uvs;
+  mesh->uv_indices = maze_uv_indices;
+  mesh->vertex_data = maze_vertices;
+  mesh->vertex_indices = maze_vertex_indices;
 }
