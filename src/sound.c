@@ -99,3 +99,8 @@ void enableReverbOnCDAudio(int enable) {
 	else
 		SPU_CTRL &= ~(1 << 2);
 }
+
+void freeSpuRAM(void)
+{
+	SpuWrite((const uint32_t *)NULL, 0x1010 + (((13 << 11) * 4) * 2)) + 64;	
+}

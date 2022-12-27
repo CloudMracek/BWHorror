@@ -5,6 +5,7 @@
 */
 
 #include <stdlib.h>
+#include <stdbool.h>
 #include <sys/types.h>
 #include <psxetc.h>
 #include <psxgte.h>
@@ -225,6 +226,7 @@ int main(int argc, const char *argv[])
 {
     initDisplay();
     SpuInit();
+    freeSpuRAM();
 
     initInput();
     gameInit();

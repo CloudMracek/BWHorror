@@ -58,3 +58,4 @@ int upload_sample(const void *data, int size);
 int play_sample(int addr, int sample_rate);
 void setupReverb(int volume, int bufferSize, const ReverbPreset *preset);
 void enableReverbOnChannels(uint32_t bits);
+void freeSpuRAM(void);
